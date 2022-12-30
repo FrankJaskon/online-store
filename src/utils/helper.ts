@@ -1,0 +1,1 @@
+export const HEIGHTHEADER: number = 58

@@ -1,9 +1,12 @@
 export interface Device {
-    id: number
+    id?: number
     name: string
-    price: string
-    rating: number
-    img: string
+    price: number
+    typeId: number
+    brandId: number
+    rating?: number
+    img?: File
+    info?: Info[]
 }
 
 export interface TypeOrBrand {

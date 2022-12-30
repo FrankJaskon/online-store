@@ -3,28 +3,15 @@ import { Device, TypeOrBrand } from './types'
 
 export default class DeviceStore {
     // State
-    _types: TypeOrBrand[] = [
-        { id: 1, name: 'Tables' }, { id: 2, name: 'Chairs' },
-        { id: 3, name: 'Tables and Chairs' }, { id: 4, name: 'Chairs and Tables' },
-    ]
-    _brands: TypeOrBrand[] = [
-        { id: 1, name: 'Apple' }, { id: 2, name: 'Samsung' },
-        { id: 6, name: 'Lenovo' }, { id:7, name: 'Asus' },
-    ]
-    _devices: Device[] = [
-        { id: 1, name: 'Chair', price: '2000', rating: 10, img: 'http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcTJFaVVfHhnZrdAlFPPstrU-LvlsTyBmT8uptShiI2s17ELAzaifmZHX8hhn1Uy-GyeUf0V8RE1gUBe7EYWx8E' },
-        { id: 2, name: 'Chair', price: '2000', rating: 10, img: 'http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcTJFaVVfHhnZrdAlFPPstrU-LvlsTyBmT8uptShiI2s17ELAzaifmZHX8hhn1Uy-GyeUf0V8RE1gUBe7EYWx8E' },
-        { id: 3, name: 'Chair', price: '2000', rating: 10, img: 'http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcTJFaVVfHhnZrdAlFPPstrU-LvlsTyBmT8uptShiI2s17ELAzaifmZHX8hhn1Uy-GyeUf0V8RE1gUBe7EYWx8E' },
-        { id: 4, name: 'Chair', price: '2000', rating: 10, img: 'http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcTJFaVVfHhnZrdAlFPPstrU-LvlsTyBmT8uptShiI2s17ELAzaifmZHX8hhn1Uy-GyeUf0V8RE1gUBe7EYWx8E' },
-        { id: 5, name: 'Chair', price: '2000', rating: 10, img: 'http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcTJFaVVfHhnZrdAlFPPstrU-LvlsTyBmT8uptShiI2s17ELAzaifmZHX8hhn1Uy-GyeUf0V8RE1gUBe7EYWx8E' },
-        { id: 6, name: 'Chair', price: '2000', rating: 10, img: 'http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcTJFaVVfHhnZrdAlFPPstrU-LvlsTyBmT8uptShiI2s17ELAzaifmZHX8hhn1Uy-GyeUf0V8RE1gUBe7EYWx8E' },
-        { id: 7, name: 'Chair', price: '2000', rating: 10, img: 'http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcTJFaVVfHhnZrdAlFPPstrU-LvlsTyBmT8uptShiI2s17ELAzaifmZHX8hhn1Uy-GyeUf0V8RE1gUBe7EYWx8E' },
-        { id: 8, name: 'Chair', price: '2000', rating: 10, img: 'http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcTJFaVVfHhnZrdAlFPPstrU-LvlsTyBmT8uptShiI2s17ELAzaifmZHX8hhn1Uy-GyeUf0V8RE1gUBe7EYWx8E' },
-        { id: 9, name: 'Chair', price: '2000', rating: 10, img: 'http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcTJFaVVfHhnZrdAlFPPstrU-LvlsTyBmT8uptShiI2s17ELAzaifmZHX8hhn1Uy-GyeUf0V8RE1gUBe7EYWx8E' },
-        { id: 10, name: 'Chair', price: '2000', rating: 10, img: 'http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcTJFaVVfHhnZrdAlFPPstrU-LvlsTyBmT8uptShiI2s17ELAzaifmZHX8hhn1Uy-GyeUf0V8RE1gUBe7EYWx8E' },
-    ]
-    _selectedType: TypeOrBrand = { id: 0, name: '' }
-    _selectedBrand: TypeOrBrand = { id: 0, name: '' }
+    _types: TypeOrBrand[] = []
+    _brands: TypeOrBrand[] = []
+    _devices: Device[] = []
+    _selectedType: TypeOrBrand = {} as TypeOrBrand
+    _selectedBrand: TypeOrBrand = {} as TypeOrBrand
+    _loading: boolean = false
+    _page: number = 1
+    _totalCount: number = 0
+    _limit: number = 20
 
     // Subscription on changes
     constructor() {
@@ -47,6 +34,18 @@ export default class DeviceStore {
     setSelectedBrand( brand: TypeOrBrand ) {
         this._selectedBrand = brand
     }
+    setLoading( value: boolean ) {
+        this._loading = value
+    }
+    setPage( value: number ) {
+        this._page = value
+    }
+    setLimit( value: number ) {
+        this._limit = value
+    }
+    setTotalCount( value: number ) {
+        this._totalCount = value
+    }
     // Getter changed value
     get types() {
         return this._types
@@ -62,5 +61,17 @@ export default class DeviceStore {
     }
     get selectedBrand() {
         return this._selectedBrand
+    }
+    get loading() {
+        return this._loading
+    }
+    get page() {
+        return this._page
+    }
+    get totalCount() {
+        return this._totalCount
+    }
+    get limit() {
+        return this._limit
     }
 }

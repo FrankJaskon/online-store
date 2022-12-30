@@ -27,10 +27,13 @@
 
 .icon-star-empty:before {
   content: "\e9d7";
+  color: #ffc107;
 }
 .icon-star-half:before {
   content: "\e9d8";
+  color: #ffc107;
 }
 .icon-star-full:before {
   content: "\e9d9";
+  color: #ffc107;
 }

@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx'
 
 export default class UserStore {
     // State
-    _isAuth: boolean = true
+    _isAuth: boolean = false
     _user: any = {}
 
     // Subscription on changes
