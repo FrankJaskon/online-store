@@ -8,7 +8,7 @@ import { fetchBrands, fetchDevices, fetchTypes } from '../http/deviceApi'
 import { observer } from 'mobx-react-lite'
 import CenteredSpinner from '../components/spinner'
 import Pages from '../components/pages'
-import { HEIGHTHEADER } from '../utils/helper'
+import { HEADER_HEIGHT } from '../utils/helper'
 
 const Shop = observer((): JSX.Element => {
     const { device } = useContext( Context )
@@ -38,7 +38,7 @@ const Shop = observer((): JSX.Element => {
 
     return (
         <Container style={{
-            minHeight: window.innerHeight - HEIGHTHEADER,
+            minHeight: window.innerHeight - HEADER_HEIGHT,
         }}>
             <Row className='p-4'>
                 <Col md={ 3 }>

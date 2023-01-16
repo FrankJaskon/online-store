@@ -1,1 +1,1 @@
-export const HEIGHTHEADER: number = 58
+export const HEADER_HEIGHT: number = 58

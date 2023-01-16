@@ -4,11 +4,18 @@ import { useForm } from 'react-hook-form'
 import { createBrand } from '../../http/deviceApi'
 import { REQUIRED } from '../../utils/validation'
 
+interface Props {
+	setMessage: React.Dispatch<React.SetStateAction<string>>
+	show: boolean
+	setIsNotification: () => void
+	onHide: () => void
+}
+
 interface FormData {
 	name: string
 }
 
-const CreateBrand = observer(({ show, onHide }: any ) => {
+const CreateBrand = observer(({ show, onHide, setMessage, setIsNotification }: Props ) => {
 	const { register, setError, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
 		defaultValues: {
 		name: '',
@@ -20,6 +27,8 @@ const CreateBrand = observer(({ show, onHide }: any ) => {
 		if ( response.error ) {
 			return setError( 'name',  { type: 'serverError', message: response.message })
 		}
+		setIsNotification()
+		setMessage( 'Brand has been created successfully' )
 		onClose()
 	})
 
@@ -37,7 +46,7 @@ const CreateBrand = observer(({ show, onHide }: any ) => {
 			centered >
 			<Modal.Header closeButton>
 				<Modal.Title id="contained-modal-title-vcenter">
-					Create new type
+					Create new brand
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>

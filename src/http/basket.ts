@@ -18,3 +18,30 @@ export const fetchBasket = async () => {
         console.error( e.message )
     }
 }
+
+export const incrementCount = async ( deviceId: number ) => {
+    try {
+        const { data } = await $authHost.patch( 'api/basket', { deviceId, increment: true })
+        return data
+    } catch( e: any ) {
+        console.error( e.message )
+    }
+}
+
+export const decrementCount = async ( deviceId: number ) => {
+    try {
+        const { data } = await $authHost.patch( 'api/basket', { deviceId, decrement: true })
+        return data
+    } catch( e: any ) {
+        console.error( e.message )
+    }
+}
+
+export const removeItem = async ( deviceId: number ) => {
+    try {
+        const { data } = await $authHost.delete( 'api/basket', { data: { deviceId }})
+        return data
+    } catch( e: any ) {
+        console.error( e.message )
+    }
+}

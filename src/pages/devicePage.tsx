@@ -5,12 +5,13 @@ import { Button, Col, Container, Image, Row, Table } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import { fetchOneDevice } from '../http/deviceApi'
 import { Device } from '../store/types'
-import { HEIGHTHEADER } from '../utils/helper'
+import { HEADER_HEIGHT } from '../utils/helper'
 import { fetchBasket, postBasketDevice } from '../http/basket'
 import { BASKET_ROUTE } from '../utils/consts'
 import Rating from '../components/rating'
 import Blank from '../components/blank'
 import CenteredSpinner from '../components/spinner'
+import AppToast from '../components/toast'
 
 const DevicePage = observer(() => {
     const navigation = useNavigate()
@@ -28,6 +29,7 @@ const DevicePage = observer(() => {
     })
     const [ isError, setIsError ] = useState<boolean>( false )
     const [ isLoading, setIsLoading ] = useState<boolean>( true )
+    const [ notification, setNotification ] = useState<boolean>( false )
 
     useEffect(() => {
         fetchOneDevice( Number( id ) ).then(({ device }) => {
@@ -43,7 +45,7 @@ const DevicePage = observer(() => {
 
     if ( isError ) return <Container
         fluid
-        style={{ minHeight: window.innerHeight - HEIGHTHEADER }}><Blank />
+        style={{ minHeight: window.innerHeight - HEADER_HEIGHT }}><Blank />
     </Container>
 
     const onClick = async ( id: number ) => {
@@ -53,17 +55,22 @@ const DevicePage = observer(() => {
 			return console.error( response.message )
 		}
 
-        fetchBasket().then(({ devices: { count, rows } }) => {
-            basket.setBasketDevices( rows )
+        fetchBasket().then(({ devices: { count, rows: devices }, basketDevices }) => {
+            basket.setBasketDevices( devices, basketDevices )
             basket.setTotalCount( count )
-        })
+        }).catch(( e => {
+            console.error( e )
+        }))
+
+        setNotification( true )
     }
 
     return (
         <Container fluid
                    style={{
-                        minHeight: window.innerHeight - HEIGHTHEADER,
+                        minHeight: window.innerHeight - HEADER_HEIGHT,
                         overflow: 'auto',
+                        position: 'relative',
                     }}>
             <Row>
                 <Col md={ 4 }
@@ -80,13 +87,15 @@ const DevicePage = observer(() => {
                     className='mt-3'>
                     <div className='d-flex flex-column justify-content-between align-items-center'
                         style={{ height: 300 }}>
-                        <h2>{ item.name }</h2>
+                        <h2 className='text-center'>{ item.name }</h2>
                         <div style={{
                             position: 'relative',
                             height: '100%', }}>
-                            <Rating rate={ item.rating } star={{
-                                justStar: true,
-                                fontSize: '250px',
+                            <Rating
+                                rate={ item.rating }
+                                star={{
+                                    justStar: true,
+                                    fontSize: '150px',
                             }} />
                             <div style={{
                                 width: '100%',
@@ -134,6 +143,8 @@ const DevicePage = observer(() => {
                     </tbody>
                 </Table>
             </div>
+
+            { notification && <AppToast text='Item added to shop card' callback={() => setNotification( false )} /> }
 
         </Container>
     )

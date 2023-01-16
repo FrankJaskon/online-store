@@ -5,7 +5,7 @@ import './css/icons.css'
 import App from './App'
 import DeviceStore from './store/deviceStore'
 import UserStore from './store/userStrore'
-import BasketStore from './store/basketStroe'
+import BasketStore from './store/basketStore'
 
 export const Context = createContext<any>( null )
 

@@ -11,7 +11,7 @@ import { Context } from '../main'
 import CenteredSpinner from '../components/spinner'
 import { useForm } from 'react-hook-form'
 import { INCORRECTEMAIL, REQUIRED, SHORTPASSWORD } from '../utils/validation'
-import { HEIGHTHEADER } from '../utils/helper'
+import { HEADER_HEIGHT } from '../utils/helper'
 
 interface FormData {
     email: string
@@ -52,7 +52,7 @@ const Auth = observer((): JSX.Element => {
 
     return (
         <Container className='d-flex justify-content-center align-items-center auth'
-                   style={{ height: window.innerHeight - HEIGHTHEADER }} >
+                   style={{ height: window.innerHeight - HEADER_HEIGHT }} >
             <Card className='auth_inner p-5' style={{ width: '600px' }}>
                 <h2 className='m-auto'>{ isLogin ? 'Authorization' : 'Registration' }</h2>
                 <Form

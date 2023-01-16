@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom'
 import CreateBrand from '../components/modals/createBrand'
 import CreateDevice from '../components/modals/createDevice'
 import CreateType from '../components/modals/createType'
+import AppToast from '../components/toast'
 import { Context } from '../main'
 import { LOGIN_ROUTE } from '../utils/consts'
-import { HEIGHTHEADER } from '../utils/helper'
+import { HEADER_HEIGHT } from '../utils/helper'
 
 const Admin = observer((): JSX.Element => {
     const { user } = useContext( Context )
@@ -16,11 +17,14 @@ const Admin = observer((): JSX.Element => {
     const [ showedType, setShowedType ] = useState<boolean>( false )
     const [ showedBrand, setShowedBrand ] = useState<boolean>( false )
     const [ showedDevice, setShowedDevice ] = useState<boolean>( false )
+    const [ notification, setNotification ] = useState<boolean>( false )
+    const [ notificationText, setNotificationText ] = useState<string>( '' )
 
     if ( !user.isAuth ) navigate( LOGIN_ROUTE )
-    return (
-        <Container>
-            <div style={{ height: window.innerHeight - HEIGHTHEADER }}
+    return <Container
+        fluid
+        className='position-relative'>
+            <div style={{ height: window.innerHeight - HEADER_HEIGHT }}
                  className='d-flex justify-content-center align-items-center'>
                 <div className='d-grid gap-2'
                      style={{ width: 300 }}>
@@ -35,14 +39,23 @@ const Admin = observer((): JSX.Element => {
                             onClick={ () => setShowedDevice( true ) }>Add device</Button>
                 </div>
             </div>
-            <CreateType show={ showedType }
-                        onHide={ () => setShowedType( false ) } />
-            <CreateBrand show={ showedBrand }
-                        onHide={ () => setShowedBrand( false ) } />
-            <CreateDevice show={ showedDevice }
-                        onHide={ () => setShowedDevice( false ) } />
-        </Container>
-    )
+        <CreateType
+            show={ showedType }
+            onHide={ () => setShowedType(false) }
+            setIsNotification={ () => setNotification( true ) }
+            setMessage={ setNotificationText } />
+        <CreateBrand
+            show={ showedBrand }
+            onHide={ () => setShowedBrand(false) }
+            setIsNotification={ () => setNotification( true ) }
+            setMessage={ setNotificationText } />
+        <CreateDevice
+            show={ showedDevice }
+            onHide={ () => setShowedDevice(false) }
+            setIsNotification={ () => setNotification( true ) }
+            setMessage={ setNotificationText } />
+        { notification && <AppToast text={ notificationText } callback={() => setNotification( false )} /> }
+    </Container>
 })
 
 export default Admin

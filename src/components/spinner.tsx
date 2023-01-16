@@ -1,5 +1,5 @@
 import { Container, Spinner } from 'react-bootstrap'
-import { HEIGHTHEADER } from '../utils/helper'
+import { HEADER_HEIGHT } from '../utils/helper'
 
 interface Props {
     border?: boolean
@@ -10,7 +10,7 @@ interface Props {
 function CenteredSpinner( { border, fullWindow }: Props ) {
     return (
         <Container
-            style={{ minHeight: fullWindow ? window.innerHeight - HEIGHTHEADER : 'auto' }}
+            style={{ minHeight: fullWindow ? window.innerHeight - HEADER_HEIGHT : 'auto' }}
             className='d-flex align-items-center justify-content-center'>
             <Spinner animation={ border ? 'border' : 'grow' } />
         </Container>

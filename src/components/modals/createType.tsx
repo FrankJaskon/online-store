@@ -4,11 +4,19 @@ import { createType } from '../../http/deviceApi'
 import { useForm } from 'react-hook-form'
 import { REQUIRED } from '../../utils/validation'
 
+interface Props {
+	setMessage: React.Dispatch<React.SetStateAction<string>>
+	show: boolean
+	setIsNotification: () => void
+	onHide: () => void
+}
+
+
 interface FormData {
 	name: string
 }
 
-const CreateType = observer(( { show, onHide }: any ) => {
+const CreateType = observer(( { show, onHide, setMessage, setIsNotification }: Props ) => {
 	const { register, setError, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
 		defaultValues: {
 		name: '',
@@ -20,7 +28,8 @@ const CreateType = observer(( { show, onHide }: any ) => {
 		if ( response.error ) {
 			return setError( 'name',  { type: 'serverError', message: response.message })
 		}
-
+		setIsNotification()
+		setMessage( 'Type has been created successfully' )
 		onClose()
 	})
 
@@ -38,7 +47,7 @@ const CreateType = observer(( { show, onHide }: any ) => {
 			centered>
 			<Modal.Header closeButton>
 				<Modal.Title id='contained-modal-title-vcenter'>
-					Create new device
+					Create new type
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>

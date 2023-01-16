@@ -18,11 +18,13 @@ interface FormData {
 }
 
 interface Props {
-    show: boolean
-    onHide: () => void
+	setMessage: React.Dispatch<React.SetStateAction<string>>
+	show: boolean
+	setIsNotification: () => void
+	onHide: () => void
 }
 
-const CreateDevice = observer(( { show, onHide }: Props ) => {
+const CreateDevice = observer(( { show, onHide, setMessage, setIsNotification }: Props ) => {
     const { device } = useContext( Context )
     const [ info, setInfo ] = useState<Info[]>( [] )
     const [ field, setField ] = useState<string[]>( [] )
@@ -50,7 +52,8 @@ const CreateDevice = observer(( { show, onHide }: Props ) => {
         if ( response.error ) {
             return setError( 'errorField',  { type: 'serverError', message: response.message })
         }
-
+        setIsNotification()
+        setMessage( 'Device has been created successfully' )
         resetForm()
         onHide()
 	})
@@ -69,17 +72,14 @@ const CreateDevice = observer(( { show, onHide }: Props ) => {
     }
 
     const onClickType = async () => {
-        if ( device.types.length ) return
 		setLoading( 't' )
         await fetchTypes().then(({ types }) => {
             device.setType( types )
         })
 		setLoading( '' )
-
     }
 
     const onClickBrand = async () => {
-        if ( device.brands.length ) return
 		setLoading( 'b' )
         await fetchBrands().then(({ brands }) => {
             device.setBrand( brands )
@@ -148,7 +148,7 @@ const CreateDevice = observer(( { show, onHide }: Props ) => {
 			centered>
 			<Modal.Header closeButton>
 				<Modal.Title id="contained-modal-title-vcenter">
-					Create new type
+					Create new device
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
@@ -160,7 +160,7 @@ const CreateDevice = observer(( { show, onHide }: Props ) => {
                     <Col md={ 6 }>
                         <Dropdown onClick={ onClickType }>
                             { loading === 't'
-                                ? <Button><CenteredSpinner border /></Button>
+                                ? <Button style={{ width: '100%' }}><CenteredSpinner border /></Button>
                                 : <Dropdown.Toggle
                                     style={{ width: '100%' }}>{ device.selectedType.name || 'Choose device type' }
                                 </Dropdown.Toggle> }
@@ -183,7 +183,7 @@ const CreateDevice = observer(( { show, onHide }: Props ) => {
                             onClick={ onClickBrand }
                             className='mt-2'>
                             { loading === 'b'
-                                ? <Button><CenteredSpinner border /></Button>
+                                ? <Button style={{ width: '100%' }}><CenteredSpinner border /></Button>
                                 : <Dropdown.Toggle
                                     style={{ width: '100%' }}>{ device.selectedBrand.name || 'Choose device brand' }
                                 </Dropdown.Toggle> }

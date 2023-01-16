@@ -4,12 +4,11 @@ import { BrowserRouter } from 'react-router-dom'
 import AppRouter from './components/appRouter'
 import NavBar from './components/navBar'
 import CenteredSpinner from './components/spinner'
-import { fetchBasket } from './http/basket'
 import { check } from './http/userApi'
 import { Context } from './main'
 
 const App = observer(() => {
-	const { user, basket } = useContext( Context )
+	const { user } = useContext( Context )
 	const [ loading, setLoading ] = useState<boolean>( true )
 
 	useEffect(() => {
@@ -21,13 +20,6 @@ const App = observer(() => {
 		}).finally(() => {
 			setLoading( false )
 		})
-
-		fetchBasket().then(({ devices: { count, rows } }) => {
-            basket.setBasketDevices( rows )
-            basket.setTotalCount( count )
-        }).catch(( e => {
-			console.error( e )
-		}))
 	}, [])
 
 	if ( loading ) {

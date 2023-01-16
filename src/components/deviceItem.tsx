@@ -30,8 +30,7 @@ const DeviceItem = observer(( {device: { id, name, rating, price, img, typeId, b
                 <Card.Img src={ import.meta.env.VITE_API_URL + img }
                           style={{
                             cursor: 'pointer',
-                            minHeight: '120px',
-                            maxHeight: '150px',
+                            height: '150px',
                             objectFit: 'contain' }} />
                 <Card.Body>
                     <Card.Subtitle
