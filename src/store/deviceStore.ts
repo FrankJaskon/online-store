@@ -6,6 +6,7 @@ export default class DeviceStore {
     _types: TypeOrBrand[] = []
     _brands: TypeOrBrand[] = []
     _devices: Device[] = []
+    _selectedDevice: Device = {} as Device
     _selectedType: TypeOrBrand = {} as TypeOrBrand
     _selectedBrand: TypeOrBrand = {} as TypeOrBrand
     _loading: boolean = false
@@ -27,6 +28,9 @@ export default class DeviceStore {
     }
     setDevices( devices: Device[] ) {
         this._devices = devices
+    }
+    setSelectedDevice( device: Device ) {
+        this._selectedDevice = device
     }
     setSelectedType( type: TypeOrBrand ) {
         this._selectedType = type
@@ -55,6 +59,9 @@ export default class DeviceStore {
     }
     get devices() {
         return this._devices
+    }
+    get device() {
+        return this._selectedDevice
     }
     get selectedType() {
         return this._selectedType

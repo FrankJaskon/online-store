@@ -12,28 +12,22 @@ import Rating from '../components/rating'
 import Blank from '../components/blank'
 import CenteredSpinner from '../components/spinner'
 import AppToast from '../components/toast'
+import CreateRating from '../components/modals/rate'
+import EditDevice from '../components/modals/EditDevice'
 
 const DevicePage = observer(() => {
+    const { device, basket } = useContext( Context )
     const navigation = useNavigate()
-    const { basket } = useContext( Context )
     const { id } = useParams()
-    const [ item, setItem ] = useState<Device>({
-        id: 0,
-        img: undefined,
-        name: '',
-        price: 0,
-        rating: 0,
-        info: [],
-        typeId: 0,
-        brandId: 0,
-    })
     const [ isError, setIsError ] = useState<boolean>( false )
     const [ isLoading, setIsLoading ] = useState<boolean>( true )
+    const [ isShownModal, setIsShownModal ] = useState<'edit' | 'grade'>()
     const [ notification, setNotification ] = useState<boolean>( false )
+    const [ notificationText, setNotificationText ] = useState<string>( '' )
 
     useEffect(() => {
-        fetchOneDevice( Number( id ) ).then(({ device }) => {
-            setItem( device )
+        fetchOneDevice( Number( id )).then(({ device: item }) => {
+            device.setSelectedDevice( item )
         }).catch(() => {
             setIsError( true )}
         ).finally(() => {
@@ -47,6 +41,14 @@ const DevicePage = observer(() => {
         fluid
         style={{ minHeight: window.innerHeight - HEADER_HEIGHT }}><Blank />
     </Container>
+
+    const closeModal = () => {
+        setIsShownModal( undefined )
+    }
+
+    const addNotification = () => {
+        setNotification( true )
+    }
 
     const onClick = async ( id: number ) => {
         const response = await postBasketDevice( id )
@@ -62,6 +64,7 @@ const DevicePage = observer(() => {
             console.error( e )
         }))
 
+        setNotificationText( 'Item added to shop card' )
         setNotification( true )
     }
 
@@ -74,46 +77,39 @@ const DevicePage = observer(() => {
                     }}>
             <Row>
                 <Col md={ 4 }
-                    className='mt-3'
+                    className='mt-3 d-flex align-items-center'
                     style={{ background: '#fff' }}>
-                    <div style={{ width: 300, height: 300, margin: '0 auto' }}>
-                        <Image src={ item?.img ? import.meta.env.VITE_API_URL + item.img : '' }
-                            alt={ item.name }
-                            style={{ height: '100%', width: 'auto' }}
-                            className='d-block mx-auto' />
-                    </div>
+                    <Image src={ device.device?.img ? import.meta.env.VITE_API_URL + device.device.img : '' }
+                        alt={ device.device?.name }
+                        style={{ height: 'auto', maxWidth: '100%' }}
+                        className='d-block mx-auto' />
                 </Col>
                 <Col md={ 4 }
                     className='mt-3'>
-                    <div className='d-flex flex-column justify-content-between align-items-center'
+                    <div
+                        className='d-flex flex-column justify-content-between align-items-center'
                         style={{ height: 300 }}>
-                        <h2 className='text-center'>{ item.name }</h2>
-                        <div style={{
-                            position: 'relative',
-                            height: '100%', }}>
-                            <Rating
-                                rate={ item.rating }
-                                star={{
-                                    justStar: true,
-                                    fontSize: '150px',
-                            }} />
-                            <div style={{
-                                width: '100%',
-                                fontSize: '2rem',
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate( -50%, -50% )',
-                                textAlign: 'center',
-                            }}>{ item.rating }</div>
-                        </div>
+                        <h2 className='text-center'>{ device.device?.name }</h2>
+                        <Button
+                            style={{
+                                height: 150,
+                                width: 150,
+                                border: 'solid 2px',
+                                borderRadius: '50%',
+                            }}
+                            onClick={() => setIsShownModal( 'edit' )}>Edit</Button>
+                        <span
+                            style={{ fontSize: 40 }}
+                            onClick={() => setIsShownModal( 'grade' )}>
+                            <Rating rate={ device.device?.rating } />
+                        </span>
                     </div>
                 </Col>
                 <Col md={ 4 }
                     className='mt-3'>
                     <div className='d-flex flex-column justify-content-between align-items-center p-5'
                             style={{ height: '100%', backgroundColor: '#fff' }}>
-                            <div>from { item.price } &#8372;</div>
+                            <div>from { device.device?.price } &#8372;</div>
                             { basket.basketDevices.filter(( d: Device ) => d.id === Number( id )).length
                                 ? <Button
                                     variant='outline-dark'
@@ -134,7 +130,7 @@ const DevicePage = observer(() => {
                         <h2 style={{ fontSize: 36, fontWeight: 700, color: '#000' }}>Specifications</h2></caption>
                     <tbody>
                         <tr style={{ display: 'none' }}></tr>
-                        { item.info?.map( ( item: any ) => {
+                        { device.device?.info?.map( ( item: any ) => {
                             return <tr key={ item.id }>
                                 <td style={{ width: '40%' }}>{ item.title }:</td>
                                 <td style={{ width: '60%', textAlign: 'left' }}>{ item.description }</td>
@@ -144,7 +140,19 @@ const DevicePage = observer(() => {
                 </Table>
             </div>
 
-            { notification && <AppToast text='Item added to shop card' callback={() => setNotification( false )} /> }
+            <EditDevice
+                show={ isShownModal === 'edit' }
+                onHide={ closeModal }
+                setIsNotification={ addNotification }
+                setMessage={ setNotificationText } />
+            <CreateRating
+                id={ device.device?.id as number }
+                show={ isShownModal === 'grade' }
+                onHide={ closeModal }
+                setIsNotification={ addNotification }
+                setMessage={ setNotificationText } />
+
+            { notification && <AppToast text={ notificationText } callback={() => setNotification( false )} /> }
 
         </Container>
     )

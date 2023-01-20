@@ -26,13 +26,13 @@ const BrandBar = observer(() => {
 
     return (
         <div className='d-flex align-items-center flex-wrap'>
-            { device.brands.map( ( brand: TypeOrBrand ) => {
+            { device.brands.map(( brand: TypeOrBrand ) => {
                 return <Card
                     key={ brand.id }
                     bg={ device.selectedBrand.id === brand.id ? 'primary' : 'light' }
                     text={ device.selectedBrand.id === brand.id ? 'light' : 'dark' }
                     onClick={ () => onClick( brand ) }
-                    className='me-3 py-2 px-4'
+                    className='me-3 mt-2 py-2 px-4'
                     style={{ cursor: 'pointer' }}>{ brand.name }</Card>
             }) }
         </div>

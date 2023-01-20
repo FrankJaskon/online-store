@@ -23,9 +23,11 @@ const DeviceItem = observer(( {device: { id, name, rating, price, img, typeId, b
     const brand = device.brands?.filter(( b: TypeOrBrand ) => b.id === brandId )[ 0 ]
 
     return (
-        <Col md={ 3 }
-             className='mb-3'
-             onClick={ handleClick }>
+        <Col
+            md={ 3 }
+            sm={ 6 }
+            className='mb-3'
+            onClick={ handleClick }>
             <Card border='light'>
                 <Card.Img src={ import.meta.env.VITE_API_URL + img }
                           style={{

@@ -37,14 +37,19 @@ const Shop = observer((): JSX.Element => {
 	}
 
     return (
-        <Container style={{
-            minHeight: window.innerHeight - HEADER_HEIGHT,
+        <Container
+            fluid
+            style={{
+                minHeight: window.innerHeight - HEADER_HEIGHT,
         }}>
-            <Row className='p-4'>
-                <Col md={ 3 }>
+            <Row
+                className='p-4 pt-3'>
+                <Col
+                    sm={ 3 }
+                    className='pt-2'>
                     <TypeBar />
                 </Col>
-                <Col md={ 9 }>
+                <Col sm={ 9 }>
                     <BrandBar />
                     <DeviceList />
                     <Pages />

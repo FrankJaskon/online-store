@@ -48,6 +48,16 @@ export const createDevice = async ( device: FormData ) => {
     }
 }
 
+export const updateDevice = async ( device: FormData, id: number ) => {
+    try {
+        const { data } = await $authHost.put( 'api/device/' + id, device )
+        return data
+    } catch( e: any ) {
+        console.error( e.message )
+        return { error: true, message: e.response.data.message }
+    }
+}
+
 export const fetchDevices = async (
     typeId: number | undefined = undefined,
     brandId: number | undefined = undefined,
@@ -74,5 +84,15 @@ export const fetchOneDevice = async ( id: number ) => {
         return data
     } catch( e: any ) {
         console.error( e.message )
+    }
+}
+
+export const createRating = async ( grade: number, deviceId: number ) => {
+    try {
+        const { data } = await $authHost.post( 'api/rating', { grade, deviceId })
+        return data
+    } catch( e: any ) {
+        console.error( e.message )
+        return { error: true, message: e.response.data.message }
     }
 }

@@ -134,8 +134,8 @@ const CreateDevice = observer(( { show, onHide, setMessage, setIsNotification }:
         <Col md={ 4 }>
             <Button
                 variant='outline-danger'
-                onClick={ () => removeInfo( item.id as number ) }
-                style={{ width: '100%' }}>Remove</Button>
+                onClick={() => removeInfo( item.id as number )}
+                className='w-100 mt-sm-2 mt-md-0' >Remove</Button>
         </Col>
     </Row> )
 
@@ -155,8 +155,7 @@ const CreateDevice = observer(( { show, onHide, setMessage, setIsNotification }:
            <Form
                 id='device_form'
                 onSubmit={ onSubmit }>
-                <div className='d-grid gap-3 mt-4 mx-auto'
-                     style={{ width: 400 }}>
+                <div className='d-grid gap-3 mt-4 mx-auto px-4'>
                     <Col md={ 6 }>
                         <Dropdown onClick={ onClickType }>
                             { loading === 't'
@@ -276,19 +275,35 @@ const CreateDevice = observer(( { show, onHide, setMessage, setIsNotification }:
                 </div>
             </Form>
 			</Modal.Body>
-			<Modal.Footer style={{ width: 400, margin: '0 auto', paddingRight: 0 }}>
-                <Button
-                    variant='outline-danger'
-                    onClick={ resetForm }>Clean</Button>
-                <Button
-                    variant='outline-primary'
-                    onClick={ () => clearErrors() }>Edit</Button>
-				<Button
-                    form='device_form'
-                    variant='outline-success'
-                    type='submit'
-                    style={{ marginRight: 0 }}>Add</Button>
-			</Modal.Footer>
+			<hr className='m-0 mt-3' />
+			<div className='p-4'>
+                <Row>
+                    <Col md={{ span: 4, offset: 8 }}>
+                        <Row>
+                            <Col md={ 4 }>
+                                <Button
+                                variant='outline-danger'
+                                className='w-100 px-0'
+                                onClick={ resetForm }>Clean</Button>
+                            </Col>
+                            <Col md={ 4 }>
+                                <Button
+                                    variant='outline-primary'
+                                    className='w-100 px-0'
+                                    onClick={ () => clearErrors() }>Edit</Button>
+                            </Col>
+                            <Col md={ 4 }>
+                                <Button
+                                    form='device_form'
+                                    variant='outline-success'
+                                    type='submit'
+                                    className='w-100 px-0'
+                                    style={{ marginRight: 0 }}>Send</Button>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+			</div>
 		</Modal>
 	)
 })

@@ -1,31 +1,16 @@
 interface Props {
     rate: number | undefined
-    star?: {
-        justStar: boolean
-        fontSize: string
-    }
+    justStar?: boolean
 }
 
-const Rating = ({ rate, star }: Props) => {
+const Rating = ({ rate, justStar }: Props) => {
     const newStar = rate === 0
-                ? <span
-                    className='icon-star-empty ms-1'
-                    style={{
-                        fontSize: `${ star?.fontSize }`
-                    }}></span>
+                ? <span className='icon-star-empty ms-1' />
                 : rate === 10
-                    ? <span
-                        className='icon-star-full ms-1'
-                        style={{
-                            fontSize: `${ star?.fontSize }`
-                        }}></span>
-                    : <span
-                        className='icon-star-half ms-1'
-                        style={{
-                            fontSize: `${ star?.fontSize }`
-                        }}></span>
+                    ? <span className='icon-star-full ms-1' />
+                    : <span className='icon-star-half ms-1' />
 
-    if ( star?.justStar ) return newStar
+    if ( justStar ) return newStar
 
     return <div
         style={{
