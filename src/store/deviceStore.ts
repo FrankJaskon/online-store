@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx'
-import { Device, TypeOrBrand } from './types'
+import { Device, Filter, TypeOrBrand } from './types'
 
 export default class DeviceStore {
     // State
@@ -13,6 +13,7 @@ export default class DeviceStore {
     _page: number = 1
     _totalCount: number = 0
     _limit: number = 20
+    _filter: Filter = {} as Filter
 
     // Subscription on changes
     constructor() {
@@ -50,6 +51,9 @@ export default class DeviceStore {
     setTotalCount( value: number ) {
         this._totalCount = value
     }
+    setFilter( value: Filter ) {
+        this._filter = value
+    }
     // Getter changed value
     get types() {
         return this._types
@@ -80,5 +84,8 @@ export default class DeviceStore {
     }
     get limit() {
         return this._limit
+    }
+    get filter() {
+        return this._filter
     }
 }

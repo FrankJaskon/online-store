@@ -4,10 +4,10 @@ import { Context } from '../main'
 import { Button, Col, Container, Image, Row, Table } from 'react-bootstrap'
 import { useNavigate, useParams } from 'react-router-dom'
 import { fetchOneDevice } from '../http/deviceApi'
-import { Device } from '../store/types'
+import { Device, Info } from '../store/types'
 import { HEADER_HEIGHT } from '../utils/helper'
 import { fetchBasket, postBasketDevice } from '../http/basket'
-import { BASKET_ROUTE } from '../utils/consts'
+import { ADMIN_ROLE, BASKET_ROUTE } from '../utils/consts'
 import Rating from '../components/rating'
 import Blank from '../components/blank'
 import CenteredSpinner from '../components/spinner'
@@ -16,7 +16,7 @@ import CreateRating from '../components/modals/rate'
 import EditDevice from '../components/modals/EditDevice'
 
 const DevicePage = observer(() => {
-    const { device, basket } = useContext( Context )
+    const { user, device, basket } = useContext( Context )
     const navigation = useNavigate()
     const { id } = useParams()
     const [ isError, setIsError ] = useState<boolean>( false )
@@ -50,6 +50,15 @@ const DevicePage = observer(() => {
         setNotification( true )
     }
 
+    const onClickRating = () => {
+        if ( user.user.role === ADMIN_ROLE ) {
+            setNotification( true )
+            setNotificationText( 'Admin cannot influence rating' )
+        } else {
+            setIsShownModal( 'grade' )
+        }
+    }
+
     const onClick = async ( id: number ) => {
         const response = await postBasketDevice( id )
 
@@ -81,7 +90,7 @@ const DevicePage = observer(() => {
                     style={{ background: '#fff' }}>
                     <Image src={ device.device?.img ? import.meta.env.VITE_API_URL + device.device.img : '' }
                         alt={ device.device?.name }
-                        style={{ height: 'auto', maxWidth: '100%' }}
+                        style={{ height: 'auto', maxWidth: '100%', maxHeight: 350 }}
                         className='d-block mx-auto' />
                 </Col>
                 <Col md={ 4 }
@@ -90,17 +99,17 @@ const DevicePage = observer(() => {
                         className='d-flex flex-column justify-content-between align-items-center'
                         style={{ height: 300 }}>
                         <h2 className='text-center'>{ device.device?.name }</h2>
-                        <Button
+                        { user.user.role === ADMIN_ROLE && <Button
                             style={{
                                 height: 150,
                                 width: 150,
                                 border: 'solid 2px',
                                 borderRadius: '50%',
                             }}
-                            onClick={() => setIsShownModal( 'edit' )}>Edit</Button>
+                            onClick={() => setIsShownModal( 'edit' )}>Edit</Button> }
                         <span
                             style={{ fontSize: 40 }}
-                            onClick={() => setIsShownModal( 'grade' )}>
+                            onClick={ onClickRating }>
                             <Rating rate={ device.device?.rating } />
                         </span>
                     </div>
@@ -130,7 +139,7 @@ const DevicePage = observer(() => {
                         <h2 style={{ fontSize: 36, fontWeight: 700, color: '#000' }}>Specifications</h2></caption>
                     <tbody>
                         <tr style={{ display: 'none' }}></tr>
-                        { device.device?.info?.map( ( item: any ) => {
+                        { sortInfo( device.device?.info ).map( ( item: any ) => {
                             return <tr key={ item.id }>
                                 <td style={{ width: '40%' }}>{ item.title }:</td>
                                 <td style={{ width: '60%', textAlign: 'left' }}>{ item.description }</td>
@@ -143,6 +152,7 @@ const DevicePage = observer(() => {
             <EditDevice
                 show={ isShownModal === 'edit' }
                 onHide={ closeModal }
+                sortInfo={ sortInfo }
                 setIsNotification={ addNotification }
                 setMessage={ setNotificationText } />
             <CreateRating
@@ -159,3 +169,17 @@ const DevicePage = observer(() => {
 })
 
 export default DevicePage
+
+const sortInfo = ( arr: Info[] ) => {
+    const sortTemplate = ( a: string, b: string ) => {
+        if ( a > b  ) {
+            return -1
+        }
+        if ( a < b  ) {
+            return 1
+        }
+        return 0
+    }
+
+    return [ ...arr ].sort(( a: Info, b: Info ) => sortTemplate( a.title, b.title ))
+}

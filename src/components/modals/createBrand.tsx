@@ -1,7 +1,9 @@
 import { observer } from 'mobx-react-lite'
+import { useContext } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
-import { createBrand } from '../../http/deviceApi'
+import { createBrand, fetchBrands } from '../../http/deviceApi'
+import { Context } from '../../main'
 import { REQUIRED } from '../../utils/validation'
 
 interface Props {
@@ -16,6 +18,7 @@ interface FormData {
 }
 
 const CreateBrand = observer(({ show, onHide, setMessage, setIsNotification }: Props ) => {
+	const { device } = useContext( Context )
 	const { register, setError, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
 		defaultValues: {
 		name: '',
@@ -29,6 +32,11 @@ const CreateBrand = observer(({ show, onHide, setMessage, setIsNotification }: P
 		}
 		setIsNotification()
 		setMessage( 'Brand has been created successfully' )
+		fetchBrands().then(({ brands }) => {
+            device.setBrand( brands )
+        }).catch(( e ) => {
+            console.error( e )
+        })
 		onClose()
 	})
 

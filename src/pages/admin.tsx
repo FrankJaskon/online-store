@@ -7,20 +7,20 @@ import CreateDevice from '../components/modals/createDevice'
 import CreateType from '../components/modals/createType'
 import AppToast from '../components/toast'
 import { Context } from '../main'
-import { LOGIN_ROUTE } from '../utils/consts'
+import { ADMIN_ROLE, SHOP_ROUTE } from '../utils/consts'
 import { HEADER_HEIGHT } from '../utils/helper'
 
 const Admin = observer((): JSX.Element => {
     const { user } = useContext( Context )
     const navigate = useNavigate()
 
-    const [ showedType, setShowedType ] = useState<boolean>( false )
-    const [ showedBrand, setShowedBrand ] = useState<boolean>( false )
-    const [ showedDevice, setShowedDevice ] = useState<boolean>( false )
+    const [ shownType, setShownType ] = useState<boolean>( false )
+    const [ shownBrand, setShownBrand ] = useState<boolean>( false )
+    const [ shownDevice, setShownDevice ] = useState<boolean>( false )
     const [ notification, setNotification ] = useState<boolean>( false )
     const [ notificationText, setNotificationText ] = useState<string>( '' )
 
-    if ( !user.isAuth ) navigate( LOGIN_ROUTE )
+    if ( !user.isAuth && user.user.role !== ADMIN_ROLE ) navigate( SHOP_ROUTE )
     return <Container
         fluid
         className='position-relative'>
@@ -30,28 +30,28 @@ const Admin = observer((): JSX.Element => {
                      style={{ width: 300 }}>
                     <Button size='lg'
                             variant='outline-dark'
-                            onClick={ () => setShowedType( true ) }>Add type</Button>
+                            onClick={ () => setShownType( true ) }>Add type</Button>
                     <Button size='lg'
                             variant='outline-dark'
-                            onClick={ () => setShowedBrand( true ) }>Add brand</Button>
+                            onClick={ () => setShownBrand( true ) }>Add brand</Button>
                     <Button size='lg'
                             variant='outline-dark'
-                            onClick={ () => setShowedDevice( true ) }>Add device</Button>
+                            onClick={ () => setShownDevice( true ) }>Add device</Button>
                 </div>
             </div>
         <CreateType
-            show={ showedType }
-            onHide={ () => setShowedType(false) }
+            show={ shownType }
+            onHide={ () => setShownType(false) }
             setIsNotification={ () => setNotification( true ) }
             setMessage={ setNotificationText } />
         <CreateBrand
-            show={ showedBrand }
-            onHide={ () => setShowedBrand(false) }
+            show={ shownBrand }
+            onHide={ () => setShownBrand(false) }
             setIsNotification={ () => setNotification( true ) }
             setMessage={ setNotificationText } />
         <CreateDevice
-            show={ showedDevice }
-            onHide={ () => setShowedDevice(false) }
+            show={ shownDevice }
+            onHide={ () => setShownDevice(false) }
             setIsNotification={ () => setNotification( true ) }
             setMessage={ setNotificationText } />
         { notification && <AppToast text={ notificationText } callback={() => setNotification( false )} /> }

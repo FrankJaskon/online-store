@@ -1,9 +1,10 @@
 import { makeAutoObservable } from 'mobx'
+import { User } from './types'
 
 export default class UserStore {
     // State
     _isAuth: boolean = false
-    _user: any = {}
+    _user: User = {} as User
 
     // Subscription on changes
     constructor() {

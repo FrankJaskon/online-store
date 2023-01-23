@@ -1,8 +1,10 @@
 import { observer } from 'mobx-react-lite'
 import { Button, Form, Modal } from 'react-bootstrap'
-import { createType } from '../../http/deviceApi'
+import { createType, fetchTypes } from '../../http/deviceApi'
 import { useForm } from 'react-hook-form'
 import { REQUIRED } from '../../utils/validation'
+import { useContext } from 'react'
+import { Context } from '../../main'
 
 interface Props {
 	setMessage: React.Dispatch<React.SetStateAction<string>>
@@ -17,6 +19,7 @@ interface FormData {
 }
 
 const CreateType = observer(( { show, onHide, setMessage, setIsNotification }: Props ) => {
+	const { device } = useContext( Context )
 	const { register, setError, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
 		defaultValues: {
 		name: '',
@@ -30,6 +33,11 @@ const CreateType = observer(( { show, onHide, setMessage, setIsNotification }: P
 		}
 		setIsNotification()
 		setMessage( 'Type has been created successfully' )
+		fetchTypes().then(({ types }) => {
+            device.setType( types )
+        }).catch(( e ) => {
+            console.error( e )
+        })
 		onClose()
 	})
 

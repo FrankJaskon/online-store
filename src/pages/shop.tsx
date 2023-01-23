@@ -9,6 +9,7 @@ import { observer } from 'mobx-react-lite'
 import CenteredSpinner from '../components/spinner'
 import Pages from '../components/pages'
 import { HEADER_HEIGHT } from '../utils/helper'
+import SortDropdown from '../components/sortDropdown'
 
 const Shop = observer((): JSX.Element => {
     const { device } = useContext( Context )
@@ -50,7 +51,14 @@ const Shop = observer((): JSX.Element => {
                     <TypeBar />
                 </Col>
                 <Col sm={ 9 }>
-                    <BrandBar />
+                    <Row>
+                        <Col sm={ 9 }>
+                            <BrandBar />
+                        </Col>
+                        <Col sm={ 3 } className='pt-2'>
+                            <SortDropdown />
+                        </Col>
+                    </Row>
                     <DeviceList />
                     <Pages />
                 </Col>

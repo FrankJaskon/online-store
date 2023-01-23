@@ -1,4 +1,5 @@
 import { $authHost, $host } from '.'
+import { Filter } from '../store/types'
 
 export const createType = async ( type: string ) => {
     try {
@@ -62,7 +63,8 @@ export const fetchDevices = async (
     typeId: number | undefined = undefined,
     brandId: number | undefined = undefined,
     page: number,
-    limit: number ) => {
+    limit: number,
+    filter: Filter | undefined = undefined ) => {
     try {
         const { data } = await $host.get(
             'api/device', {
@@ -71,6 +73,8 @@ export const fetchDevices = async (
                     brandId,
                     page,
                     limit,
+                    filterKey: filter?.key,
+                    filterOrder: filter?.order,
             }})
         return data
     } catch( e: any ) {
@@ -81,6 +85,15 @@ export const fetchDevices = async (
 export const fetchOneDevice = async ( id: number ) => {
     try {
         const { data } = await $host.get( 'api/device/' + id )
+        return data
+    } catch( e: any ) {
+        console.error( e.message )
+    }
+}
+
+export const removeDevice = async ( id: number ) => {
+    try {
+        const { data } = await $authHost.delete( 'api/device', { data: { id }})
         return data
     } catch( e: any ) {
         console.error( e.message )
