@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { Dropdown } from 'react-bootstrap'
 import { fetchDevices } from '../http/deviceApi'
 import { Context } from '../main'
@@ -17,13 +17,13 @@ const SortDropdown = observer(() => {
     ]
 
     const setNewFilter = ( option: Filter ) => {
-        device.setFilter( option )
         fetchDevices( device.selectedType.id, device.selectedBrand.id, device.page, device.limit, option )
-            .then(({ devices: { rows, count }}) => {
+        .then(({ devices: { rows, count }}) => {
+                device.setFilter( option )
                 device.setTotalCount( count )
                 device.setDevices( rows )
+            .catch(( e: Error ) => console.error( e ))
         })
-
     }
 
     return <Dropdown>

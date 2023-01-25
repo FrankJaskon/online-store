@@ -42,7 +42,7 @@ const Basket = observer((): JSX.Element => {
         </li>
     })
 
-    const price = basket.basketDevices?.reduce(( accumulator: number, current: any ) => {
+    const price = basket.basketDevices?.reduce(( accumulator: number, current: BasketDeviceType ) => {
         return accumulator + ( current.count * current.price)
     }, 0)
 

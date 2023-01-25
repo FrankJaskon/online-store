@@ -2,6 +2,7 @@ import { makeAutoObservable } from 'mobx'
 import { Device } from './types'
 
 export interface BasketDevice extends Device {
+    deviceId: number
     count: number
 }
 
@@ -17,7 +18,7 @@ export default class BasketStore {
     }
 
     // Actions
-    setBasketDevices( devices: BasketDevice[], basketDevices: any ) {
+    setBasketDevices( devices: BasketDevice[], basketDevices: BasketDevice[] ) {
         for ( let i = 0; i < basketDevices.length; i++ ) {
             for ( let j = 0; j < devices.length; j++ ) {
                 if ( basketDevices[ i ].deviceId === devices[ j ].id ) {

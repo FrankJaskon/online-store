@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import { config } from 'process'
 
 const $host = axios.create({
@@ -9,7 +9,7 @@ const $authHost = axios.create({
     baseURL: import.meta.env.VITE_API_URL
 })
 
-const authInterceptor = ( config: any) => {
+const authInterceptor = ( config: any ) => {
     config.headers.authorization = `Bear ${ localStorage.getItem( 'token' ) }`
     return config
 }

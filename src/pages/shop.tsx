@@ -31,6 +31,8 @@ const Shop = observer((): JSX.Element => {
         ]).finally(() => {
             device.setLoading( false )
         })
+
+        return device.setFilter( {} )
     }, [])
 
     if ( device.loading ) {
