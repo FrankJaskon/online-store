@@ -13,14 +13,14 @@ const Specification = ({ info, onChangeInfo, removeInfo }: Props ) => {
             <Col md={ 4 }>
                 <Form.Control
                     type="text"
-                    placeholder="Info field (title: value)"
+                    placeholder="title"
                     value={ item.title }
                     onChange={( e ) => onChangeInfo( 'title', index, e.target.value )} />
             </Col>
             <Col md={ 4 }>
                 <Form.Control
                     type="text"
-                    placeholder="Info field (title: value)"
+                    placeholder="value"
                     value={ item.description }
                     onChange={( e ) => onChangeInfo( 'description', index, e.target.value )} />
             </Col>

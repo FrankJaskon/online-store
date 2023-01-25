@@ -99,14 +99,6 @@ const DevicePage = observer(() => {
                         className='d-flex flex-column justify-content-between align-items-center'
                         style={{ height: 300 }}>
                         <h2 className='text-center'>{ device.device?.name }</h2>
-                        { user.user.role === ADMIN_ROLE && <Button
-                            style={{
-                                height: 150,
-                                width: 150,
-                                border: 'solid 2px',
-                                borderRadius: '50%',
-                            }}
-                            onClick={() => setIsShownModal( 'edit' )}>Edit</Button> }
                         <span
                             style={{ fontSize: 40 }}
                             onClick={ onClickRating }>
@@ -136,7 +128,16 @@ const DevicePage = observer(() => {
                     variant='light'
                     style={{width: '100%' }}>
                     <caption style={{ captionSide: 'top' }}>
-                        <h2 style={{ fontSize: 36, fontWeight: 700, color: '#000' }}>Specifications</h2></caption>
+                        <h2
+                            className='d-flex justify-content-between'
+                            style={{ fontSize: 36, fontWeight: 700, color: '#000' }}><span>Specifications</span>
+                            { user.user.role === ADMIN_ROLE
+                                && <Button
+                                    variant='outline-primary'
+                                    style={{ width: 200 }}
+                                    onClick={() => setIsShownModal('edit')}>Edit device</Button> }
+                        </h2>
+                    </caption>
                     <tbody>
                         <tr style={{ display: 'none' }}></tr>
                         { sortInfo( device.device?.info ).map( ( item: any ) => {

@@ -47,7 +47,9 @@ const EditDevice = observer(( { show, onHide, setMessage, setIsNotification, sor
         formData.append( 'name', name )
         formData.append( 'price', price.toString())
         if ( image ) formData.append( 'img', image[ 0 ])
-        formData.append( 'info', JSON.stringify( info ))
+        formData.append( 'info', JSON.stringify( info.map( i => {
+            return { ...i, title: i.title.trim(), description: i.description.trim() }
+        })))
         formData.append( 'typeId', device.selectedType.id )
         formData.append( 'brandId', device.selectedBrand.id )
 
@@ -64,7 +66,7 @@ const EditDevice = observer(( { show, onHide, setMessage, setIsNotification, sor
 
     const onClose = () => {
         onHide()
-        setInfo( sortInfo( device.device?.info ))
+        setInfo( device.device?.info )
         device.setSelectedType( device.types.filter(( t: TypeOrBrand ) => t.id === device.device.typeId )[ 0 ])
         device.setSelectedBrand( device.brands.filter(( b: TypeOrBrand ) => b.id === device.device.brandId )[ 0 ])
         reset()
@@ -86,16 +88,16 @@ const EditDevice = observer(( { show, onHide, setMessage, setIsNotification, sor
     }
 
     const removeInfo = ( id: number ) => {
-        setInfo( sortInfo( info.filter( item => item.id !== id )))
+        setInfo( info.filter( item => item.id !== id ))
     }
 
     const onChangeInfo = ( key: string, number: number, value: string ) => {
-        setInfo(( prev ) => sortInfo( prev.map(( info, index ) => {
+        setInfo(( prev ) => prev.map(( info, index ) => {
             if ( index === number ) {
                 return { ...info, [ key ]: value }
             }
             return info
-        })))
+        }))
     }
 
     const buttons = <Row>

@@ -57,6 +57,7 @@ const DeviceItem = observer(( {device: { id, name, rating, price, img, typeId, b
                         </Card.Title>
                         <Rating rate={ rating } />
                     </div>
+                    <Card.Text style={{ fontSize: 24, textAlign: 'end' }}>{ price } &#8372;</Card.Text>
                 </Card.Body>
             </Card>
         </Col>
