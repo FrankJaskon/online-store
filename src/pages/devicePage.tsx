@@ -140,7 +140,7 @@ const DevicePage = observer(() => {
                     </caption>
                     <tbody>
                         <tr style={{ display: 'none' }}></tr>
-                        { sortInfo( device.device?.info ).map( ( item: any ) => {
+                        { sortInfo( device.device?.info ).map(( item: Info ) => {
                             return <tr key={ item.id }>
                                 <td style={{ width: '40%' }}>{ item.title }:</td>
                                 <td style={{ width: '60%', textAlign: 'left' }}>{ item.description }</td>
