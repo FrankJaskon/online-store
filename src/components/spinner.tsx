@@ -7,7 +7,11 @@ interface Props {
     fullWindow?: boolean
 }
 
-function CenteredSpinner( { border, fullWindow }: Props ) {
+export const delay = ( func: () => void ) => {
+    setTimeout(() => func(), 300 )
+}
+
+const CenteredSpinner = ( { border, fullWindow }: Props ) => {
     return (
         <Container
             style={{ minHeight: fullWindow ? window.innerHeight - HEADER_HEIGHT : 'auto' }}

@@ -4,6 +4,7 @@ import { ListGroup } from 'react-bootstrap'
 import { fetchDevices } from '../http/deviceApi'
 import { Context } from '../main'
 import { TypeOrBrand } from '../store/types'
+import { delay } from './spinner'
 
 const TypeBar = observer(() => {
     const { device } = useContext( Context )
@@ -11,7 +12,7 @@ const TypeBar = observer(() => {
     const onClick = async ( type: TypeOrBrand ) => {
         device.setLoading( true )
         if ( device.selectedType.id === type.id ) {
-            device.setSelectedType( {} )
+            device.setSelectedType( {} as TypeOrBrand )
         } else {
             device.setSelectedType( type )
         }
@@ -21,7 +22,7 @@ const TypeBar = observer(() => {
                 device.setDevices( devices )
                 device.setTotalCount( count )
         })
-        device.setLoading( false )
+        delay(() => device.setLoading( false ))
     }
 
     return (

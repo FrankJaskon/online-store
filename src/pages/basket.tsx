@@ -1,9 +1,10 @@
 import { observer } from 'mobx-react-lite'
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { Button, Card, Col, Container, Row } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import BasketDevice from '../components/basketDevice'
 import Blank from '../components/blank'
+import CenteredSpinner, { delay } from '../components/spinner'
 import AppToast from '../components/toast'
 import { Context } from '../main'
 import { BasketDevice as BasketDeviceType } from '../store/basketStore'
@@ -12,6 +13,7 @@ import { DEVICE_ROUTE } from '../utils/consts'
 import { HEADER_HEIGHT } from '../utils/helper'
 
 const Basket = observer((): JSX.Element => {
+    const [ loading, setLoading ] = useState<boolean>( true )
     const { basket } = useContext( Context )
     const [ notification, setNotification ] = useState<boolean>( false )
 
@@ -42,9 +44,15 @@ const Basket = observer((): JSX.Element => {
         </li>
     })
 
-    const price = basket.basketDevices?.reduce(( accumulator: number, current: BasketDeviceType ) => {
+    const totalPrice = basket.basketDevices?.reduce(( accumulator: number, current: BasketDeviceType ) => {
         return accumulator + ( current.count * current.price)
     }, 0)
+
+    useEffect(() => {
+        delay(() => setLoading( false ))
+    }, [])
+
+    if ( loading ) return <CenteredSpinner border fullWindow />
 
     if ( !basket.basketDevices?.length ) return <Container
         style={{
@@ -89,7 +97,7 @@ const Basket = observer((): JSX.Element => {
                                 Total price:
                                 <strong style={{
                                     whiteSpace: 'nowrap',
-                                }}>{ price } &#8372;</strong>
+                                }}>{ totalPrice } &#8372;</strong>
                             </div>
                             <Button
                                 style={{

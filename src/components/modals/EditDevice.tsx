@@ -31,7 +31,7 @@ interface Props {
 
 const EditDevice = observer(( { show, onHide, setMessage, setIsNotification, sortInfo }: Props ) => {
     const { device } = useContext( Context )
-    const [ info, setInfo ] = useState<Info[]>( sortInfo( device.device?.info ))
+    const [ info, setInfo ] = useState<Info[]>( sortInfo( device.device?.info as Info[] ))
     const navigate = useNavigate()
 
     const defaultValues: FormValues = {
@@ -50,15 +50,15 @@ const EditDevice = observer(( { show, onHide, setMessage, setIsNotification, sor
         formData.append( 'info', JSON.stringify( info.map( i => {
             return { ...i, title: i.title.trim(), description: i.description.trim() }
         })))
-        formData.append( 'typeId', device.selectedType.id )
-        formData.append( 'brandId', device.selectedBrand.id )
+        formData.append( 'typeId', device?.selectedType.id.toString() )
+        formData.append( 'brandId', device?.selectedBrand.id.toString() )
 
-        const response = await updateDevice( formData, device.device.id )
+        const response = await updateDevice( formData, device.device.id as number )
 
         if ( response.error ) {
             return setError( 'errorField',  { type: 'serverError', message: response.message })
         }
-        fetchDeviceData( device, device.device.id )
+        fetchDeviceData( device, device.device.id as number )
         setIsNotification()
         setMessage( 'Device has been updated successfully' )
         onHide()
@@ -66,14 +66,14 @@ const EditDevice = observer(( { show, onHide, setMessage, setIsNotification, sor
 
     const onClose = () => {
         onHide()
-        setInfo( device.device?.info )
+        setInfo( device.device?.info as Info[])
         device.setSelectedType( device.types.filter(( t: TypeOrBrand ) => t.id === device.device.typeId )[ 0 ])
         device.setSelectedBrand( device.brands.filter(( b: TypeOrBrand ) => b.id === device.device.brandId )[ 0 ])
         reset()
     }
 
     const onRemoveDevice = async () => {
-        const response = await removeDevice( device.device.id )
+        const response = await removeDevice( device.device.id as number )
 
         if ( response.error ) {
             return console.error( response.message )
@@ -125,8 +125,8 @@ const EditDevice = observer(( { show, onHide, setMessage, setIsNotification, sor
         fetchTypesAndBrands( device )
 
         return () => {
-            device.setSelectedType( {} )
-            device.setSelectedBrand( {} )
+            device.setSelectedType( {} as TypeOrBrand )
+            device.setSelectedBrand( {} as TypeOrBrand )
         }
     }, [])
 

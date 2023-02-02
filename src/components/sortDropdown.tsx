@@ -4,8 +4,13 @@ import { Dropdown } from 'react-bootstrap'
 import { fetchDevices } from '../http/deviceApi'
 import { Context } from '../main'
 import { Filter } from '../store/types'
+import { delay } from './spinner'
 
-const SortDropdown = observer(() => {
+interface Props {
+    setLoading: ( value: boolean ) => void
+}
+
+const SortDropdown: React.FC<Props> = observer(({ setLoading }) => {
     const { device } = useContext( Context )
     const options: Filter[] = [
         { key: 'price', order: 'DESC' },
@@ -17,12 +22,15 @@ const SortDropdown = observer(() => {
     ]
 
     const setNewFilter = ( option: Filter ) => {
+        setLoading( true )
         fetchDevices( device.selectedType.id, device.selectedBrand.id, device.page, device.limit, option )
         .then(({ devices: { rows, count }}) => {
                 device.setFilter( option )
                 device.setTotalCount( count )
                 device.setDevices( rows )
-            .catch(( e: Error ) => console.error( e ))
+        }).catch(( e: Error ) => console.error( e ))
+        .finally(() => {
+            delay(() => setLoading( false ))
         })
     }
 

@@ -1,22 +1,36 @@
+import { useClickOutside } from '@mantine/hooks'
 import { observer } from 'mobx-react-lite'
-import { useContext, useEffect } from 'react'
-import { Navbar, Nav, Badge } from 'react-bootstrap'
+import { useContext, useEffect, useState } from 'react'
+import { Navbar, Nav, Badge, Row, Col } from 'react-bootstrap'
 import Button from 'react-bootstrap/esm/Button'
 import Container from 'react-bootstrap/esm/Container'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { fetchBasket } from '../http/basket'
+import { logout } from '../http/userApi'
 import { Context } from '../main'
+import { User } from '../store/types'
 import { ADMIN_ROLE, ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, SHOP_ROUTE } from '../utils/consts'
+import { HEADER_HEIGHT } from '../utils/helper'
 
-const NavBar = observer( () => {
+const NavBar = observer(() => {
 	const { user, basket } = useContext( Context )
+	const [ extended, setExtended ] = useState<boolean>( false )
+	const ref = useClickOutside(() => setExtended( false ))
 	const navigate = useNavigate()
 
-	const logOut = () => {
-		user.setUser( {} )
-		user.setIsAuth( false )
-		localStorage.removeItem( 'token' )
-		navigate( LOGIN_ROUTE )
+	const logOut = async () => {
+		const response: any = await logout()
+		if ( Number( response ) === 200 ) {
+			user.setUser( {} as User )
+			user.setIsAuth( false )
+			localStorage.removeItem( 'token' )
+			navigate( LOGIN_ROUTE )
+		}
+	}
+
+	const onClickLink = ( path: string ) => {
+		navigate( path )
+		if ( extended ) setExtended( false )
 	}
 
 	useEffect(() => {
@@ -30,55 +44,74 @@ const NavBar = observer( () => {
 
 	return (
 		<header className="header">
-			<Navbar bg="dark" variant="dark">
+			<Navbar
+				style={{ minHeight: HEADER_HEIGHT }}
+				bg="dark"
+				variant="dark"
+				collapseOnSelect
+				expand="sm"
+				expanded={ extended }
+				onToggle={() => setExtended( !extended )}>
 				<Container fluid>
 					<NavLink
 						reloadDocument
 						to={ SHOP_ROUTE }
 						style={{ color: '#fff', textDecoration: 'none' }}
 						className='d-block px-3 py-2'>Brand logo</NavLink>
+					<div className='d-flex align-items-center'>
+						<div
+							className='d-flex align-items-center d-sm-none me-2'
+							onClick={() => onClickLink( BASKET_ROUTE ) }
+							style={{ color: '#fff' }}>
+							<span
+								style={{ fontSize: 24 }}
+								className='icon-cart' />
+							<TotalCount total={ basket.totalCount } />
+						</div>
+						<Navbar.Toggle aria-controls="responsive-navbar-nav" />
+					</div>
+					<Navbar.Collapse
+						ref={ ref }
+						id="responsive-navbar-nav"
+						className='justify-content-end'>
 					{ <Nav className="ml-auto header_nav">
 							{ user.isAuth
 							? <>
 								{ user.user.role === ADMIN_ROLE && <Button
 									variant='outline-light'
-									className='p-0'>
-									<NavLink
-										to={ ADMIN_ROUTE }
+									className='header-link p-0 mt-2 mt-sm-0'>
+									<a
+										onClick={() => onClickLink( ADMIN_ROUTE )}
 										style={{ textDecoration: 'none' }}
-										className='d-block px-3 py-2'>Admin panel</NavLink>
+										className='d-block px-3 py-2'>Admin panel</a>
 								</Button> }
 								<Button
 									variant='outline-light'
-									className='p-0 ms-2'>
-									<NavLink
-										to={ SHOP_ROUTE }
+									className='header-link p-0 ms-sm-2 mt-2 mt-sm-0'>
+									<a
+										onClick={() => onClickLink( SHOP_ROUTE )}
 										style={{ textDecoration: 'none' }}
-										className='d-block px-3 py-2'>Shop</NavLink>
+										className='d-block px-3 py-2'>Shop</a>
 								</Button>
 								<Button
 									variant='outline-light'
-									className='p-0 ms-2'>
-									<NavLink
-										to={ BASKET_ROUTE }
+									className='header-link p-0 ms-sm-2 mt-2 mt-sm-0'>
+									<a
+										onClick={() => onClickLink( BASKET_ROUTE )}
 										style={{ textDecoration: 'none' }}
 										className='d-block px-3 py-2'>
 										Card
-										<Badge
-											bg='primary'
-											style={{
-												marginLeft: '.5rem'
-											}}>{ basket.totalCount }</Badge>
-									</NavLink>
+										<TotalCount total={ basket.totalCount } />
+									</a>
 								</Button>
 								<Button variant='outline-light'
-										className='header_nav_btn ms-2 px-3 py-2'
+										className='header-link ms-sm-2 px-3 py-2 mt-2 mt-sm-0'
 										style={{ textDecoration: 'none' }}
 										onClick={ logOut }>Exit</Button>
 							</>
 							: <Button
 								variant='outline-light'
-								className='header_nav_btn ms-2 p-0'>
+								className='ms-sm-2 p-0 mt-2 mt-sm-0'>
 								<NavLink
 									to={ LOGIN_ROUTE }
 									style={{ textDecoration: 'none' }}
@@ -88,6 +121,7 @@ const NavBar = observer( () => {
 							</Button> }
 						</Nav>
 					}
+					</Navbar.Collapse>
 				</Container>
 			</Navbar>
 		</header>
@@ -95,3 +129,15 @@ const NavBar = observer( () => {
 })
 
 export default NavBar
+
+interface TotalProps {
+	total: number
+}
+
+const TotalCount: React.FC<TotalProps> = ({ total }) => {
+	return <Badge
+		bg='primary'
+		style={{
+			marginLeft: '.5rem'
+	}}>{ total }</Badge>
+}

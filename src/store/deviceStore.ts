@@ -9,7 +9,7 @@ export default class DeviceStore {
     _selectedDevice: Device = {} as Device
     _selectedType: TypeOrBrand = {} as TypeOrBrand
     _selectedBrand: TypeOrBrand = {} as TypeOrBrand
-    _loading: boolean = false
+    _loading: boolean = true
     _page: number = 1
     _totalCount: number = 0
     _limit: number = 20

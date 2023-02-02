@@ -5,10 +5,10 @@ import Button from 'react-bootstrap/esm/Button'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/consts'
 import { login, registration } from '../http/userApi'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../main'
-import CenteredSpinner from '../components/spinner'
+import CenteredSpinner, { delay } from '../components/spinner'
 import { useForm } from 'react-hook-form'
 import { INCORRECTEMAIL, REQUIRED, SHORTPASSWORD } from '../utils/validation'
 import { HEADER_HEIGHT } from '../utils/helper'
@@ -47,8 +47,16 @@ const Auth = observer((): JSX.Element => {
 	})
 
     const [ loading, setLoading ] = useState<boolean>( false )
+    const [ pageLoading, setPageLoading ] = useState<boolean>( true )
 
     const button = loading ? <CenteredSpinner /> : isLogin ? 'Sing in' : 'Sing up'
+
+    useEffect(() => {
+        delay(() => setPageLoading( false ))
+        return () => setPageLoading( true )
+    }, [ location ])
+
+    if ( pageLoading ) return <CenteredSpinner border fullWindow />
 
     return (
         <Container className='d-flex justify-content-center align-items-center auth'

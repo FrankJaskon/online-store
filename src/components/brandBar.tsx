@@ -4,6 +4,7 @@ import { Card } from 'react-bootstrap'
 import { fetchDevices } from '../http/deviceApi'
 import { Context } from '../main'
 import { TypeOrBrand } from '../store/types'
+import { delay } from './spinner'
 
 const BrandBar = observer(() => {
     const { device } = useContext( Context )
@@ -11,7 +12,7 @@ const BrandBar = observer(() => {
     const onClick = async ( brand: TypeOrBrand ) => {
         device.setLoading( true )
         if ( device.selectedBrand.id === brand.id ) {
-            device.setSelectedBrand( {} )
+            device.setSelectedBrand( {} as TypeOrBrand )
         } else {
             device.setSelectedBrand( brand )
         }
@@ -21,7 +22,7 @@ const BrandBar = observer(() => {
                 device.setDevices( devices )
                 device.setTotalCount( count )
         })
-        device.setLoading( false )
+        delay(() => device.setLoading( false ))
     }
 
     return (

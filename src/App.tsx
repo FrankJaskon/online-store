@@ -6,6 +6,7 @@ import NavBar from './components/navBar'
 import CenteredSpinner from './components/spinner'
 import { check } from './http/userApi'
 import { Context } from './main'
+import { User } from './store/types'
 
 const App = observer(() => {
 	const { user } = useContext( Context )
@@ -14,8 +15,8 @@ const App = observer(() => {
 	useEffect(() => {
 		check().then( data => {
 			if ( data ) {
-				user.setUser( data )
 				user.setIsAuth( true )
+				user.setUser( data as User )
 			}
 		}).finally(() => {
 			setLoading( false )

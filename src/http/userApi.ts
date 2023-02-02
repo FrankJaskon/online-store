@@ -1,33 +1,47 @@
-import { $authHost, $host } from '.'
-import jwt_decode from 'jwt-decode'
+import authService from '../services/authService'
+
+export interface FormError {
+    error: boolean
+    message: string
+}
 
 export const registration = async ( email: string, password: string ) => {
     try {
-        const { data } = await $host.post( 'api/user/registration', { email, password })
+        const { data } = await authService.registration( email, password )
         localStorage.setItem( 'token', data.accessToken )
         return ( data.user )
     } catch( e: any ) {
         console.error( e.message )
-        return { error: true, message: e.response.data.message }
+        return { error: true, message: e.response.data.message } as FormError
     }
 }
 
 export const login = async ( email: string, password: string ) => {
     try {
-        const { data } = await $host.post( 'api/user/login', { email, password })
-        localStorage.setItem( 'token', data.token )
-        return jwt_decode( data.token )
+        const { data } = await authService.login( email, password )
+        localStorage.setItem( 'token', data.accessToken )
+        return ( data.user )
     } catch( e: any ) {
         console.error( e.message )
-        return { error: true, message: e.response.data.message }
+        return { error: true, message: e.response.data.message } as FormError
+    }
+}
+
+export const logout = async () => {
+    try {
+        const { status } = await authService.logout()
+        localStorage.removeItem( 'token' )
+        return ( status )
+    } catch( e: any ) {
+        console.error( e.message )
     }
 }
 
 export const check = async () => {
     try {
-        const { data } = await $authHost.get( 'api/user/auth' )
-        localStorage.setItem( 'token', data.token )
-        return jwt_decode( data.token )
+        const { data } = await authService.check()
+        localStorage.setItem( 'token', data.accessToken )
+        return data.user
     } catch( e: any ) {
         console.error( e.message )
     }

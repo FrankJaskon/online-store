@@ -3,10 +3,11 @@ import { Col, Container, Row } from 'react-bootstrap'
 import BrandBar from '../components/brandBar'
 import DeviceList from '../components/deviceList'
 import TypeBar from '../components/typeBar'
+import { Filter } from '../store/types'
 import { Context } from '../main'
 import { fetchBrands, fetchDevices, fetchTypes } from '../http/deviceApi'
 import { observer } from 'mobx-react-lite'
-import CenteredSpinner from '../components/spinner'
+import CenteredSpinner, { delay } from '../components/spinner'
 import Pages from '../components/pages'
 import { HEADER_HEIGHT } from '../utils/helper'
 import SortDropdown from '../components/sortDropdown'
@@ -29,10 +30,13 @@ const Shop = observer((): JSX.Element => {
                     device.setDevices( rows )
             }),
         ]).finally(() => {
-            device.setLoading( false )
+            delay(() => device.setLoading( false ))
         })
 
-        return device.setFilter( {} )
+        return () => {
+            device.setFilter( {} as Filter )
+            device.setLoading( true )
+        }
     }, [])
 
     if ( device.loading ) {
@@ -58,7 +62,7 @@ const Shop = observer((): JSX.Element => {
                             <BrandBar />
                         </Col>
                         <Col sm={ 3 } className='pt-2'>
-                            <SortDropdown />
+                            <SortDropdown setLoading={( value: boolean ) => device.setLoading( value )} />
                         </Col>
                     </Row>
                     <DeviceList />

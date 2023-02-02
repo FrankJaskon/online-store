@@ -37,3 +37,6 @@
   content: "\e9d9";
   color: #ffc107;
 }
+.icon-cart:before {
+  content: "\e93a";
+}

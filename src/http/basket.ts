@@ -5,7 +5,6 @@ export const postBasketDevice = async ( deviceId: number ) => {
         const { data } = await $authHost.post( 'api/basket', { deviceId } )
         return data
     } catch( e: any ) {
-        console.error( e.message )
         return { error: true, message: e.response.data.message }
     }
 }

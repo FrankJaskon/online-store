@@ -10,14 +10,14 @@ import { fetchBasket, postBasketDevice } from '../http/basket'
 import { ADMIN_ROLE, BASKET_ROUTE } from '../utils/consts'
 import Rating from '../components/rating'
 import Blank from '../components/blank'
-import CenteredSpinner from '../components/spinner'
+import CenteredSpinner, { delay } from '../components/spinner'
 import AppToast from '../components/toast'
 import CreateRating from '../components/modals/rate'
-import EditDevice from '../components/modals/EditDevice'
+import EditDevice from '../components/modals/editDevice'
 
 const DevicePage = observer(() => {
     const { user, device, basket } = useContext( Context )
-    const navigation = useNavigate()
+    const navigate = useNavigate()
     const { id } = useParams()
     const [ isError, setIsError ] = useState<boolean>( false )
     const [ isLoading, setIsLoading ] = useState<boolean>( true )
@@ -31,7 +31,7 @@ const DevicePage = observer(() => {
         }).catch(() => {
             setIsError( true )}
         ).finally(() => {
-            setIsLoading( false )
+            delay(() => setIsLoading( false ))
         })
     }, [])
 
@@ -59,10 +59,13 @@ const DevicePage = observer(() => {
         }
     }
 
-    const onClick = async ( id: number ) => {
+    const onClickAddToBasket = async ( id: number ) => {
         const response = await postBasketDevice( id )
 
         if ( response.error ) {
+            setNotificationText( response.message )
+            addNotification()
+
 			return console.error( response.message )
 		}
 
@@ -115,11 +118,11 @@ const DevicePage = observer(() => {
                                 ? <Button
                                     variant='outline-dark'
                                     style={{ width: '100%' }}
-                                    onClick={() => navigation( BASKET_ROUTE )}>Check card</Button>
+                                    onClick={() => navigate( BASKET_ROUTE )}>Check card</Button>
                                 : <Button
                                     variant='outline-dark'
                                     style={{ width: '100%' }}
-                                    onClick={() => onClick( Number( id )) }>Add to card</Button> }
+                                    onClick={() => onClickAddToBasket( Number( id )) }>Add to card</Button> }
                     </div>
                 </Col>
             </Row>
@@ -140,7 +143,7 @@ const DevicePage = observer(() => {
                     </caption>
                     <tbody>
                         <tr style={{ display: 'none' }}></tr>
-                        { sortInfo( device.device?.info ).map(( item: Info ) => {
+                        { sortInfo( device.device?.info as Info[] ).map(( item: Info ) => {
                             return <tr key={ item.id }>
                                 <td style={{ width: '40%' }}>{ item.title }:</td>
                                 <td style={{ width: '60%', textAlign: 'left' }}>{ item.description }</td>

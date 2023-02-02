@@ -66,15 +66,15 @@ const DeviceModal = observer(({
                             <Dropdown className='d-flex'>
                                 <Form.Label className='me-3'>Type:</Form.Label>
                                 <Dropdown.Toggle style={{ width: '100%' }}>
-                                    { device.selectedType.name || 'Choose type' }
+                                    { device.selectedType?.name || 'Choose type' }
                                 </Dropdown.Toggle>
                                 <div>
                                     <Dropdown.Menu style={{ width: '100%' }}>
                                         { device.types.map(( item: TypeOrBrand ) => {
                                             return <Dropdown.Item
-                                                key={ item.name }
+                                                key={ item?.name }
                                                 onClick={() => device.setSelectedType( item )}>
-                                                    { item.name }
+                                                    { item?.name }
                                             </Dropdown.Item>
                                         }) }
                                     </Dropdown.Menu>
@@ -86,15 +86,15 @@ const DeviceModal = observer(({
                             <Dropdown className='mt-2 d-flex'>
                                     <Form.Label className='me-3'>Brand:</Form.Label>
                                     <Dropdown.Toggle style={{ width: '100%' }}>
-                                        { device.selectedBrand.name || 'Choose brand' }
+                                        { device.selectedBrand?.name || 'Choose brand' }
                                     </Dropdown.Toggle>
                                 <div>
                                     <Dropdown.Menu style={{ width: '100%' }}>
                                         { device.brands.map(( item: TypeOrBrand ) => {
                                             return <Dropdown.Item
-                                            key={ item.id }
+                                            key={ item?.name }
                                             onClick={() => device.setSelectedBrand( item )}>
-                                                { item.name }
+                                                { item?.name }
                                             </Dropdown.Item>
                                         }) }
                                     </Dropdown.Menu>
